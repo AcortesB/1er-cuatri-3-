@@ -1,0 +1,142 @@
+(tema nou, wiiii :D )
+
+COORDINATION AND AGREEMENT
+
+-------------------------INTRODUCCIÓN-----------------------------------
+
+Un grup de màquines coordinen les seves accions or acords en un o mñes valors en un sistema distribuit.
+    - creando un mecanismo de mutua exclusion, para coordinar acceso a recursos compartidos
+    - creando un mecanismo para seleccionar un coordinador, y para sustituirlo cuando este se caiga 
+    - creando un mecanismo para comunicar un grupo de procesos ( por ejemplo: multicasting ) 
+    - crendo un proceso paara ponerse de acuerdo en algunos valores ( oir ejemplo: consensus ) ( todos tenemos diferentes valores y debemos acordar un valor común ) <--- consensus no entra en el curs
+
+Cuanto más avurado y perfecto, más complejo y más complicado.
+Sist. Distr. donde yo solo veo mi placa de red... todo se complica más.
+
+problema:
+un grupo de procesos en un sist. distr. quieren acceso exclusivo a algunos recursos compartidos:
+la solucion es pasarse mensajes:
+- solucion basadas en permiso
+    * centralizada: yo doy permisos, quien quiera entrar que me lo pida. 
+        + sé que si necesito algo voy a buscarlo a ESE punto, que va a estar ahí
+        - se puede colapsar y si se cae ya no tengo sitio al que ir a buscar NADA
+    
+- solucion basada en Token
+
+
+PROPIEDADES QUE VEREMOS DE LA EXCLUSIÓN CRITICA
+deseables:
+    1. Seguridad
+    2. Liveness ( que no se bloquee )
+    3. Happened-before ordening ( que mantenga un cierto orden ) ( Claro, ordenalo por lo que pasa antes o lo que pasa después, nopor apellido, por ejemplo, acuerdate del ejemplo del señor Zubizarreta )
+
+MUTUAL EXCLUSION
+1. Bandwidth: cuantos mssges enviados por cada operacion de entrada o salida
+2. Delay: tiempo...TODO
+3. Synchronization delay: tiempo que pasa entre que uno sale y el otro entra, cuantas gestiones hay en medio
+
+------------------------ALGORITMO CENTRALIZADO--------------------------
+a) se le envia un request al coordinador y espera el permiso
+b) si no hay otro en la seccion critica, el coordinador garantiza el acceso ( OK )
+c) ...
+d) ... TODO
+
+PROBLEMAS:
+1. Si el coordinador falla no se sabe si está esperando a dar permiso a otros procesos o si ha caído
+2. el coordinador puede hacer cuello de botella
+
+funciona amb 3 missatges: Request, OK, release
+temps de espera: temps de 2 missatges
+segur: sip
+està viu? sep
+happened-before ordering: Nope ( preguntarle si es porque hay algunos que tienen prioridad sobre otros mensajes )
+
+ALTERNANTIVA:
+No poner toda la responsabilidad sobre un solo proceso
+( va por mayoria, votan por las solicitudes, por ejemplo nos llegan 2 solicitudes y 3 de los coordinadores hemos dicho que primero el primceso 1 y los otros 2 el proceso b, mcual entrará primero? el a, porque tiene mayoria )
+a) peticion a cada coordinador ( con un timestamp ) UTILIZAMOS tiempo logicp
+b) te dan permiso o no votando si te dejan entrar o te dicen que te esperes ( según el que haya llegado antes le dan la entrada o le diccen que se espere)
+c) el que ha hecho la peticion analiza, si tiene votacion > n/2 (mayoria) entra, si no, pues no, te esperas.
+
+Si no recibe mayoria ninguno qué pasa??! 
+- si pasa un ratitot pues libero los votos y listo
+- tens una cua ordenada per prioritat TODO
+
+Lin's algorithm
+1 si el coordinador crashea se puede olvidar de los votos
+2 el numero de menssjes se puede ir descontrolando, cuando veo que no lo libero, vuelvo a pedir, etc
+
+bandwidth: 3N + 2Mk {request + N votos + Nrelease +k{M yield + M votos}}
+timpo: round-trip ( N request + N votos )
+synch. delay: round trip ( N release + M votos )
+safety: yep
+Liveness: sip
+Happened-before ordering: NOOOPE
+
+Maekawa's algorithm
+a) request als membres dels diff grups en els que estas , per entrar necessites OK d'un grup sencer
+b) quan unprocess rep un missatge, siyo mismo estoy accediendo y nohe votado pues digo ok si no, encolo
+c) TODO
+d) TODO
+
+PROBLEMAS:
+Liveness not guaranteed
+podemos tener falladas con otros conjuntos pero como minimo con el que nos estaba diciendo que si, no podrñia fallar
+Se toleran algunas falladas, pues.
+
+Bandwidth: 3 (K request + K OK)+ K release
+Client delay: rount-trip
+Synch. delay: round-trip
+Safety? yes
+Liveness: nope
+Happened-before ordering: nuuuu
+
+
+Ricart & Agrawala's algorithm
+* Multicast with logical clocks
+    a) request a  todos los procesos 
+    b) cuando el que solicita recibe el OK de todos los procesos podrá acceder a la sección critica
+    c) cuando un ceso recibe un mensaje de request:
+        - si no estás accediendo y no quieres acceder dirás OK
+        - si estoy ccediendo porque estoy ddentor no conteso
+        - si wuiero acceder pero aun no lo he hecho comparo los clocks, si el mensje que me entra tiene un tirmpo mas pequeño mando el OK TODO
+
+PROBLEMA:
+Si a lgun proceso peta no recibirá el OK, le pido a alguien que aunque sea que no al menos me conteste un "NO",  por tabto no me esperaré su OK
+variante: por mayoria TODO
+
+Bandwidth: 2(N-1)
+Client delay: round-trip
+Synch. delay: 1(OK)
+safety: yep
+Liveness: Yes
+Happened-before ordering: yess
+
+
+---------------------TOKEN RING ALGORITHM-------------------------------
+
+Proceoss se conectan en un anillo unidireccional. Por tanto no hace falta que todos nos conozcamos.
+Un token va d¡circulando, si ninguno entra en seccion critica, tal como recibo el Token lo paso, en el momento 
+en que yo quiero entrar me espero a que me llegue el Token, entro y cuando acabe lo paso.
+Como solo se puede entrar si tiene el Token, no hay molestia ni hay nada, si lo tienes entras, si no lo tienes te esperas a que te llegue y ya ta.
+
+PROBLEMA:
+si se pierde el Token o si peta un nodo.
+Si el Token se pierde se podrñia regenerar: en el momento en que se detecta la perdida del token pues alguno que lo detecte hace una regeneración y tendremos un nuevo Token 
+Ya no sabría yo solo mis vecinos, deberia conocer a todos los nodos, más complejo
+
+Bandwidth: 1 o infinito ( no entra nadie, pero estamos todos enviando muchos mensajes )
+Client delay: entre 0 ( ya estoy dentro, ni un solo mensaje ) hasta N-1 ( me espero)
+Synch. delay: entre 1 o N-1
+safety: yep
+Liveness: Yes
+Happened-before ordering: Nu (si yo quiero entrar pero le llega el Token antes al vecino pues me aguanto, guapi )
+
+CONCLUSIONES:
+ninguno de estos algoritmos tolera falladas y particiones de red
+Como lo hacen ? buscan compromisos, se implementa una exclusion mutua que es casi correcta
+TODO
+
+
+
+

@@ -1,0 +1,146 @@
+OSPF:
+
+protocolo de estdo de enlacce, lls¡os nodos van a reicibir info de el estado de enlace de todos los nosdos de la redm
+info de la topologia 
+como estan conectados los routers y costes
+busca el camino más corto
+
+metodo de tebajao
+se descubren los nodos, descubren vecinos, se intercambian info entre ellos ( engtre los vecinos )
+Al final cada nodo sabrá los estado de ltodos los nodos, sabrá con quien están conectados los demá 
+en base a esa info el nodo x calculará como llegar a y sitio, el camino más corto 
+todos los nodos aplican e mismo algortimo
+Construcc del paq. con info de cuales son los vecinos.
+Calculo del camino de coste minimo al rsto de nodos
+(le lleva un tiempo calcularlo, porque debe calcular TODOS los destinos )
+No va a haber bucles 
+
+como calculan el camino mas corto? 
+- con SPT o con alg. de Dijkstra
+
+
+Se requiere
+- todos los routers tienen las mismas BBDD ( sincronizadas )
+
+cuando hace falta un router designado? 
+- cuando no es una conexión punto a punto. Entre los routers de la red deciden quien es el designado y
+cual el de back up designado ( TODO )
+
+La relacion entre 2 routers que se sincronizan se llama adyacencia
+(protocolo Hello)
+
+
+Una vez que se ha compartido la info inicial con el Hello solo se intercambia info cuando se detecta un cambio
+o si hay un nuevo router
+al inicializarse: sincronismo con el router designado
+si se detecta cambio: se hace protocolo de flooding ( protocolo de unundacion )
+flooding --> uno detecta un cambio y envía info, el otro recibe cambios y repiten y esto pasa recursivamente
+
+OSPF utiliza direcciones de multicast con los routers adayacentes.
+
+Cuanto más crece una red, el coste sube, cada vez costará más.
+Se pued dividir un red en pequeñas áreas, y se calculan los caminos dentro de dichas áreas 
+Disminuye el tráfico de encaminamiento, menos intercambio de mensajes, se puede calcular el camino mas rapido.
+Tendrán BBDD diferentes y arboles diferentes
+
+Problemas: para llegar de una zona a la otra tiene ue haber alguna manera donde se conozcan
+solución: routers de frontera ( ABR ) --> pasan info resummida de un a+área a otra
+
+el protocolo RIP va sobre UDP y este sobre IP, pero el OSFP va directamente sobre IP
+Los routers no tienen que propagar info d eunas redes a otras, por eso va directly sobre el IP, porque el intercambio
+solo se hace entre vecinos  ( TTL = 1 )
+
+Si unnodo detecta un cambio se lo pasa al r. designadoy este decide qué se debe hacer.
+
+
+Si se hace flooding se enviun mensaje de ACK, si el vecino no responde al que lo emite smeguira enviando mensajes de flooding
+
+RIP toma en cuenta los saltos 
+OSFP toma en cuenta la capacidad de los enlaces para determinar las rutas que se escogen
+cuanto más grande es el ancho de banda, más pqueño es el valor ye so determinaría el caminomas corto
+
+UTiliza el campo ToS de IP, cuanto mayor es el valor de este, mejor.
+
+como son los mensajes? 
+-captura del power-
+Se toma en cuenta el campo de autenticación
+
+tipos de paquetes: ( TODO )
+1 Hello
+2 Database Description
+3 link state Request
+4 link state update
+5 link state aknowledgement
+
+longitud máxima del paq. OSFP: 65535 b
+para evitar fragmentacionse suele limitar a 512 b
+
+que diferencia hay con el chesksum de IP?
+checksum en IP solo es sobre la cabecera y habia que calculars en cada nodo porque el TTL variaba 
+pero en este caso no varía y siempre es el mismo, porque el TTL es 1
+    
+Ventajas:
+se hace intercambio de mensajes oslo cuando hay cambios, en el caso del RIP se hace intercambio cada 30"
+Menos ocuoacion de recursos de la red 
+info multicast en vez de broadcast
+reduce el tiempo de convergencua ( sincro inicial y solo depues de los cambios )
+No se tiene la limitacion de los 15 saltos en el tamaño de la red en el cual se buscan los caminos
+
+permite dividir un  sistema autónomo en varias áreas
+se reduce el tráfico
+aumenta la robustez ante posibles fallos
+permite definir diferentes costes para un mismo enlace
+
+( TODO tabla pg 57 power )
+
+
+
+TEMA 5 GARANTIES
+
+Ahora vamos a ver la cpa de transporte.
+Diferencia con IP es que aquí ya vamos a distinguir entre procesos en una misma máquina
+es independiente del hardware
+
+ofrece 
+servicio extremo a extremo
+eficiente fiable
+economico
+
+Se pued ecrear u intercambio fiable sobre algo que no es fiable
+ 
+Para diferenciar los procesos se crea el concepto de puerto.
+los servicios serán:
+orientados a conexion o no 
+fiables o no fieblas 
+
+
+cuando llega un pquete y el puerto no existe --> protocolo ICMP
+
+diferentes apps o servicios tienen diferentes necesidades:
+- servicio correo, serv de transf. de archivos, de gestion, etc
+transferncia de ficheros --> importatnte que no haya errors, no se pueden perder paquete, puede tolerar retardos
+info de gestión --> importsnte que no haya retrasos ( si llega tarde ya no me sirve )
+
+( TODO añadir screenshot pg 8 de powerpoint )
+
+TODO: mirar UDP y TCP del power
+checksum -> SRC para hacer el calculo utilizancuna pseudocbecera
+checksum se realiza sobre todo, también datos
+usar la pseudocabecera afecta al modelo de campos, no hay que romper el concepto de las capas 
+UDP lo que hace es si tenemos una fuente que geera paqs UDP va enviando paqs, no se preocupa 
+si se pierden, no hay control de flujo, con TCP eso no pasa.
+
+el TCP, es un protocolo de tramsporte, transmite alto volumen de datos
+Se puede utilizar sobre redes locales o mas extensas 
+es un best-effortm no tiene campo de calidad de servicio
+protocolo orientasdo a conexion
+
+-ack con el numero que espera 
+me ha llegado un paquete 100 y yo mando el ACK 101
+no hay NACK
+confirmación acumulativa:
+mandas varios y te envian un ACK que dice "listo para recibir a partir del byte 1601", por ejemplo
+
+TODO TCP & UDP                                     
+
+

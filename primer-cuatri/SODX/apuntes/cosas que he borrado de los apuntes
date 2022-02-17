@@ -1,0 +1,17 @@
+Exclusion mutua de coordination and agreement
+Conclusiones
+ninguno de estos algoritmos tolera fallos y particiones de red
+¿Cómo lo hacen ? buscan compromisos, se implementa una exclusión mutua que es casi correcta.
+
+
+paradigmas de la comunicación de interprocess comunication
+Resumen
+La comunicación es paso de mensajes y sobre ellos podemos crear herramientas, estructuras, servicios, etc.
+Estos entornos pueden tener características,etc etc etc.
+
+Todas las primitivas son pasos de mensajes: transitorio o API
+( sockets )
+
+message-queuing systems: es un sistema persistente
+point-to-point: 
+

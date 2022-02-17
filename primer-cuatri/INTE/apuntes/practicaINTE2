@@ -1,0 +1,28 @@
+TABLAS DE ENRUTAMIENTO (o encaminamiento ) i ARP ( Address Resolution Protocol ) 
+
+-----------------------------------------------------------------------------------------------------
+
+¿Qué nos dice la tabla de enrutamiento?
+    Almacena las rutas a los diferentes nodos en una red informática.
+    Los nodos pueden ser cualquier tipo de dispositivo electrónico
+    conectado a la red.
+ 
+¿Cómo puedo mirar a tabla de enrutamiento de los PC's y de los routers?
+    Comandos en Windows:
+    - route print
+    - netstat -r
+
+-----------------------------------------------------------------------------------------------------
+
+¿Qué nos dice la tabla ARP?
+    Responsable de encontrar la dirección de Hardware que corresponde
+    a una determinada dirección IP.
+    La tabla ARP incluye los dispositivos que han respondido a una
+    solicitud de ARP (Protocolo de Resolución de Dirección)
+
+¿Cómo puedo mirar la tabla ARP de los PC's y de los routers?
+    Comandos en Windows:
+        - arp -a (para ver la tabla ARP de todas las interfaces) arp /a
+        - arp -a -N 10.0.0.99 (para ver la tabla ARP de la interfaz con la IP 10.0.0.99 asignada ) arp /a /n 10.0.0.99
+
+ 

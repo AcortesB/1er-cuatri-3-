@@ -1,0 +1,57 @@
+TIME AND ORDERING
+tiempo es importante, no es ambiguo, es el tiempo del sistema.
+clock shew 
+clock drift
+
+solutions: 
+- reloj fisico: un reloj que marca la hora. nos permiten sinccronizar nodos. Con uno máster o sincronizandonos entre nosotros.
+- reloj lógico: mecanismo para campturar la relación happened-before. Lo hacemos poniendo un id secuencial en cad evento ( queremos que el timestamp sea más grande que el otro )
+Queremos crear un mecanismo de orden.
+
+Cómo gestionamos el tiempo del timestamp?
+
+
+Relojes lógicos de Lamport
+Cogemos una franja de tiempo, acordamos que los eventos que sucedan en ese rango pasan al mismo tiempo.
+define un orden aprcial consistente con el happened-before order. 
+Si necesitamos unos relojes totalmente ordenados y tenemos varios procesos tienenel mismo valor ( por ejemplo un 1 ) desempatamos con el ID del proceso.
+qué criterios podemos usar para desempatar? ( tiene que ser un criterio que no pueda ser igual ).
+
+sincronizarnos con un reloj master ( así podemos tener uno lógico en uno físico )
+si en nuestro sistrema no tenemos un sistema atómico nos sincronizamos entre nosotros. Sea como smea será con un margen 
+nunca podremos asegurar que será la misma hora.
+
+
+Como se hace la sincronización?
+    - Algoritmo de Cristian ( todos los eqipos le piden la hora y se quedan con la hora que ellos tienencueadno envian la solicitud + RTT/2. T = t + r/2
+    
+    - Algoritmo de Berkeley ( se sincronizan todos internamente, no hay un master, pero hay un coordinador ( time server ), en vez de hacerlo en circulo es centralizado.
+      1. time server pregunta periodicamente la hora a todas las maquinas y deriva sus horas de reloj local
+      2. el Server calcula un margen de fallo tolerable
+      3. Server les devuelve el ajuste para que lo hagan en sus horas
+
+Si tú eres el master y le dices a una máquina que va mal del tiempo, que tiene un minuto de más o de menos, 
+tiene que hacerlo prgresivamente (acelerando o decelerando los relojes).
+
++ Por qué? :)
+- NO PUEDES SALTARTE UN MINUTO DE EVENTOS! >:(
++ Cómo que no? :|
+- NO, NO PUEDES. O haces que a máquina haga cosas de más o haces que la máquina se salte eventos. No puedes hacer eso...
+
+Qué tenemos en un reloj físico: intenta relacionar eventos entre diferentes mñaquinas. 
+Entre diferentes events, queremos saber cual ha pasado antes, por ejemplo. BAsciamente significa que tenemos que estar de acuerdo con el orden.
+Un evento habrá pasado antes que el otro, se puede saber cual ha pasado antes? 
+- no, realmente no. Lo importante no es saber quien ha pasado antes, lo importante es estar de acuerdo en quien ha sido el primero.
+Encontrar un acuerdo en el orden en el que han pasado las cosas.
+
+VECTOR CLOCKS
+tenemos un vector de contadores, con cada proceso incremento los contadores del vector. En qué momento actualizo la info?
+cuando haya un mensaje, cuando un proceso le mand un mensaje al otro. Envío el vector, se actualiza el vector con el máximo de cada uno.
+
+RESUMEN
+Relojes físcios son importntes para poder comparar eventos, pero siempre dentro de un pequeño margen. Non podremos utilizar relojes fisicos para cualquier paridade eventos arbitrarios 
+utilizaremos relojes logicos, que no cuenta tiempo, si no que etsablecen un orden entre eventos.
+
+
+
+

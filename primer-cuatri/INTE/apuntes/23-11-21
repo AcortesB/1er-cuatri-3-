@@ -1,0 +1,207 @@
+Nivel de TCP 
+numerode secuencia en bytes, num de reconocimiento, puertos
+
+Campos del seg de TCP:
+FIN
+SYN
+RTS
+PSH
+ACK
+URG
+
+Bit de modo urgente, hay yn buffer donde están los segmentos, si hay un segmento que tiene el bit de modo urgente pasará por delante
+
+TCP- PUSH
+os va acumulando paraen un deeterminado momento vaciar el buffer.
+Todos los datos que están en el buffer se envían
+
+
+Checksum, se calcula agragando la pseudo cabecera
+dir. IP origen IP destino 
+y se hace un aritmetica que se calcula identico a UDP, sobre los datos y sobre la cabecera.
+
+Funcionamiento: 
+
+Transmisión:
+- en ausencia de PUSH lo que hace es que se va acumulando y en un momento determinado vacia el buffery envia esa info
+Paqs. grandes tardan más
+
+Entrega:
+buffer en recepción
+TODO
+
+
+Politicas de funcionamiento:
+
+Aceptación:
+- en orden 
+- sin necesidad de orden ( necesitas una ventana )
+
+Si es en orden los que no llegar por orden se descaertan si no te ha lll¡egado el que tú esperabas 
+por ejemplo recibes el 1,2,3,5,6,7 OOOOPS, espera espera, el 4 no lo tienes, así que descartas los 5,6,7
+
+Retransmisión:
+ek buffer se va llenando hasyta que nos llega el reconocimiento del otro lado, una vez le llega ya puede vacíar el buffer
+
+El reconocimmiento es un mensaje ACK, el acumulativo es:
+Estás recibiendo una serie de mensajes antes de hacer el ACK,  esperas a tener dato a enviar al otro lado, en el momento en que tienes datos para enviar al otro lado 
+lo que haces es utiliarlo para el reconocimiento,.
+Se evita la confirmación sin datos.
+Piggy backing
+
+
+Ventana deslizante
+Sin venanta:
+Enviamos uns seg y hasta que no recibes un ACK no se envia el siguiente 
+Reconocimiento inmediato.
+
+CON VENTANA
+Con ventana: 
+envías x mensajes ( x = tamaño de la ventana ) y del otro lado cuando llega ya se hace el reconocimiento 
+del otro lado, cuando le llega el ACK la ventana se ha reducido a 2 y puede enviar otro mensaje más 
+
+
+Dos temas a tratar: 
+
+- control de flujo
+Tú envias mensajes muy rapido pero el otro recibe muy lento, SE VAN A PERDER PAQUETES, hay que avisar al otro del tamaño de la ventana del receptor
+
+- control de congestion
+Tú tienes los routers, con sus redes. Si hay muchosmensaje sa transmitir en toda la red los buffers tienen buffers, si hay muchos mensjaes los buffers se pueden desbordar , esto = retraso de paquetes ENORME
+Hay que conntrolarla, como se hace? pues le dices a los transmisores que bajen la tasa para que no saturen los routers.
+
+Hay 2 ventanas, en tramision y en recepcion.
+En una ventwana tienes los que estan confirmados, los que has transmitido sin estar confirmados y luego losque te quedan para poder enviar sin confirmación ( TODO imagen 36 )
+la vebtana variable en el tiempo 
+se puede reducir la ventsana  (  una ventana de 0 para la transmisión ) 
+
+TODO: exemple de finestra lliscant.
+ El reconocimiento solicita el siguiente byte que está esperando.
+ Si empieza en S=1001 y te llega una L=200
+ enviará un ACK de 1201, so el siguiente paquete que le llegará será el que empiece por el byte 1201.
+ El ortro lado que recibe puede hacer control de flujo, puede enviar su tamañoo de venatana con W=0 para parar la transmisión y cuando esté listo 
+ enviar el tamaño de W reestablecido.
+ 
+ 
+ 
+Apertura pasiva y apertura activa.
+TODO
+
+
+Estados de comunicacion:
+TODO
+
+Cuando se quiere iniciar una conexión se envia un SYN, por eso el primero está en SYN_SENT, espera el SYN, ACK
+el primero del otro lado está en estado SYN_RCVD y le envía un SYN, ACK
+El de la izquierda recibe un SYN, ACK y entra en estado de ESTABLISHED ( estado de establecimiento, ya se ha establecido la conexión )
+Ya se pueden enviar datos.
+El de la izquierda le manda el ACK conforme ha recibido el SYN, ACK.
+Luegi uno de los 2 lados emite el FIN, y se queda en estado FIN_WAIT_1 y el otro extremo al recoborlo estará en CLOSE_WAIT
+TODO
+
+
+
+
+
+
+Con esto termina lo de TCP, orientado a conexión, hay un establecimiento de conexión.
+En la practica se usa TELNET o ssh para hacer conexion  a u puerto, si el puerto estñá abierto ( erscuchando ) podremos ver el intercambio de mensajes 
+si no está escuchando, al enviarle el SYN_SENT recibiriamos de vuelta un RST ( Reset,  resetea la conexión. No lo recibes siempre, pero a veces si, lo que indica es eso, que el puerto no está escuchando ).
+Hay un intercambio para establecer la conexión, tiene retransmisiones y es fiable 
+como es fiable es óptimo para transferencia de ficheros, etc.
+
+
+UDP
+No orientado a conexion 
+no es fiable ( si se pierde o lñega con error, a no ser que la aplicación lo indique no se recupera ) 
+es ligero 
+no es tan complejo cono TCP 
+y es optimo para aplicaciones de reproduccion de audio y video por ejemplo.
+En UDP el emisor podria estar enviando continuamente y el receptor llega un momento en que se desborda y el transmisor va a seguir a los yo 
+no hay control de flujo.
+
+
+
+
+
+
+--------------------------------------------------------TEMA 6-------------------------------------------------------------------------
+Servicios
+
+aplicacion      <------------------ ahora estamos en esta
+----------
+transporte (TCP)
+----------
+Red IP
+----------
+Entlacce (Ethernet/Wifi
+----------
+Fisica
+
+
+Estamos en la capa de aplicación.
+En funcions de las caract. de funcion de la aplicación utilizaremos un protocolo de transporte u otro. 
+En fncion de que servicio necesites utilizará un protocolo u otro 
+
+
+Diferencia entre aplicación y servicio:
+    App: software
+    Servicios: correo, tranf. archivos, de gestión, etc.  ( servicio es transferir archivos )
+    
+Tenemos sockets UDP y sockets TCP para abrir las conexiones con la capa de transporte.
+
+
+TODO
+Cliasificacion de los servicios telemáticos 
+orientados a conexión: 
+se establece un circuito previo
+
+No orientados a conexión: 
+No se establece una conexión previa, solo se envia la info
+
+TODO: imagen pg 5 power
+
+Modelos de arquitectura: 
+- Client&server
+- Peer2peer
+
+En el cliente-servidor tenemos un server, que es el que da el servicio, que está a la escucha
+El cliente en cualquier momento se conecta con el servidor (Demonio).
+Server siempre está a la escucha.
+Tenemos que conocer su IP y si no es un puerto bien conocido no podrás conectarte a él.
+
+En el peer to peer cualquiera de los 2 podrá jugar como cliente o como servidor.
+TODO: imagen pg 8 power
+
+
+
+Terminal Networking: telnet
+Telnet permite a un usuerio local abrir una sesion terminal  e un maquina remota.
+de 1969, app mas antigua de internet.
+Utiliza TCP y escucha en el puerto 23.
+Servicios básicos: define un terminal virtual de red.
+
+NVT, Network Virtual Terminal
+cada linea acaba con una combinacion CR y LF (ASCII)
+
+Esytabliment de la comunicació.
+Negociacion de opciones
+WILL x para proponer opciones 
+DO x para avisar de que vas a usar x opcion
+El otro lado te responde si está de acuerdo o si no con un don't o con un won't
+
+si estamos en el puerto 80:: protocolo http 
+
+Transferencia de ficheros: FTP
+
+
+
+Modulo, creas 5 paquetes y con x probabilidad un paquete no lo envia 
+Tenemos que tener un modulo para simular que no enviamos un paquete.
+
+Tenemos que gestionar la pérdida de paquetes.
+
+Timeout y que vuelva a pedirlo. 
+Tenemos que hacer la app fiable, gestion de esas cosas, ya tu saeh
+
+

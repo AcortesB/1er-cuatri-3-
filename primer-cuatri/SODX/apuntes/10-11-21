@@ -1,0 +1,96 @@
+REPLICAS Y CONSISTENCIA
+razones para replicas: 
+
+disponibilididad de datos 
+confianza 
+rendimiento  ( tiene que ver con rapidez y escalabilidad )
+escalabilidad ( tamño o nivel geográfico )
+
+Retos de las replicas:
+- que sea transparente ( si quiero laos datos quiero los datos, no tengo que especificar que los quiero de x nodo, po ejemplo )
+- que se consistente (  )
+esto se hace a cambio de un overhead 
+las diferenets soluciones tienen que ver en como relajamos estos extremos 
+TODO
+podemos cenesitar max consistencia o max rendimiento, depende de lo que necesitemos en ese sistema
+
+
+DIFERENTES MODELOS DE CONSISTENCIA
+
+modelos en una base de datos
+- tenemos diferentes procesos que tienen una copia de estos datos, el problema viene cuando hhacemos operaciones 
+de escritura, cuando las hacae slo tienes que propagar. 
+Dada esa escritura cual es el resultado.
+
+Modelos de consistencia fuertes o relajados
+
+estrictos--> cualquier lectura sobre un dato x retorna valor de la escriura mmas recente sobre x
+
+para hacerlo necesitariamos mantener una ordenacion absoluta global.
+Wriites deben ser instantaneamente visibles en todas paertes, no es posible 
+clocks perfectamente sincronizados ( tampoco es posible )n
+Un timestamps con infinita precision
+Es el modelo ideal , pero es imposible.
+
+Alternativas: 
+consitencia secuencial --> el resultado de cualquie op read-write de todos los procesos se ejecutarian en el
+mismo orden pero para los procesos individuales sería en secuencia, si u proceso hace escribir a, b, c, todos los procesos verían este orden 
+pero si lo rellenan diferentes procesos podria verse en diferente orden. Pero esto no puede pasar
+ 
+Con la consistente secuencial ktodos verán el mismo orden
+Es mas debil pero esbastante estricto, porque no se pueden girar procesos
+
+Linearizability ( consistencia estricta )
+ops reciben un timestamp con un reloj global
+
+
+
+consistencia causal:
+los writes que tengan algun tipo de relacion causal ( podemos garantizar que un algo ha pasado antes que otro ) 
+es mas relajada que la anteerior 
+TODO
+
+consistncia FIFO:
+solo te  garantiiza los writes hecho por un mismo procesom, los otros no.
+
+La consistencia estricta sería lo deseable pero no es posible, cuanto más estricta sea más dificil de implementar y más coste tiene 
+secuencial, causal, FIFO
+
+Hasta aqui los modelos strong.
+
+Modelos relajados-------------------------------------------------------
+TODO
+
+para implementar consistenci relajajda necesitamos tener 2 operaciones
+- op. de adquirir un token para comenzar una secc de actualizaciones
+- op. release es para acabar
+Mientras marcas operacione sno hace falta que se actualice y en el momento en que quieres que lo haga es porque lo marcas
+y ahí sí que haces una sincronización.
+queremos que los datos sean consistentes
+
+Alternativas a este modelo: 
+consistencia client-centric
+Independientemenete d edonde se enuentren los datos deben ser consistentes desde el punto de vista del cliente, no de los datos
+- modelos data-centric tienen consistencia en todos los repositorios desde el punto de vista de los writes. Datos consistentes siempre, esté
+donde esté el cliente
+- eventual consistency : todos los procesos read, pocos write ( pocos conflictos de escritura ) , users ue puedan aceptar datos desactualizados
+- pueden gestoinar partimientos de red, usuarios que se desconectan, etc
+Un cliente se mueve, el modelo intenta que este cliente los datos qu evaya encontrando en esos diferentes repositorios sean
+consistentes desde su perspectiva, no de mantenerlo todo organizado.
+
+
+consitencia eventual:
+cuando te mueves puedes leer la copia esta o una anerior, pero nunca una más vieja si no está actualizada
+
+BAYOU
+Read your Writes
+Writes follow reads ( si yo havo un read en un server y ahora escribo, escribiré el valor que he leído o uno más reciente )
+
+diferentes modelos que podemos tener cuando queremos consistencia, que es lo deseable? strict
+Quññe podemos tener? una menos bbuena que strict
+
+
+TODO: summary of strong models 
+TODO: summary of relaxed models 
+TODO: summary of eventual models 
+

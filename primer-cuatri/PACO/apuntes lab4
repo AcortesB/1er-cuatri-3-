@@ -1,0 +1,58 @@
+1. primero me copio eso.
+podemos poner antes del return algo para que se esper
+
+Así nos aseguraremos de que se esperen:
+taskwait 
+taskgroup
+
+
+Chivato de si llo he hecho bien:
+ahora para ver diferencias se utilizará lo que me sale
+si me dice que hay alguna posicion desordenada es wue no está paralelizado.
+
+
+funcion multisort vista desde el primer nivel lo que hariamos seria esto:
+Si la n es un tamaño minimo se va al basic sort, que es el que lo irdena iterativamente ( noe stá en el codigo ) 
+En el merge le pasa lo mismo, si el tamaño es menos que un x tamaño hace el basic merge o si no vuelve 
+a hacer merge dividiendo en 2 partes el vector
+
+hint config mas usadas --> Hints --Tareador -- Profile of tasks assigned to cores
+
+si yo miro un grafo, olvidadnome de qu eetsá gecho recursivamente, no poodré empezar a hacer el siguiente merge hasta que cada tarea que necesite haya acabado
+tenemos que decirle que se espere antes dde acer el siguiente merge que toque, con qué? 
+con el taskgroup o con el taskwait
+(en los huecos de la funcion multisort ( para el leaf)
+para el tree hace falta alguna más)
+
+leaf es ideal pero no es realista, porque puede haber como mucho 4 en paralelo, lamaxima paraleliización son 4
+Sería el grafo de tareadores ideal.
+
+---------------------------------------------------------------------------------------------------------------
+
+TODO: mirar sus "pautas de orientación" del lab 3.
+taskloop ya tiene un task group implícito.
+
+pruebas enviandolo a la cola con 3 o 4 threads
+
+wxparaver
+
+configuraciones : cfgs
+
+
+cut-off
+0 y 1
+0 --> solo crea las tareas la primera vez
+1 --> solo un nivel mas e recursion
+
+si yo creo una tarea solo para cuando entra, me tiene que coincidir para cuando contemos las tareas
+Cut off es no crees mas tareas cuando te digo que el nivel de profundidad es este.
+
+---------------------------------------------------------------------------------------------------------------
+
+cuidado con el 3, renemos que hacer unas pruebas ( por ejemplo 4,8,12 )
+más de 12 ya es concurrente 
+
+
+
+multisort: 4 x multisort + 3 x merge
+merge: 3 x merge

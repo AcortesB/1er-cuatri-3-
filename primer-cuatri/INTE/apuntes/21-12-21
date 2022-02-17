@@ -1,0 +1,87 @@
+pg 38 powerpoint next
+7.2.3. Arquitectures tallafocs
+
+Bastion host
+va a actuar como proxy la idea es que odo el trafico pase por el bastion host.
+pg 42: arriba router de filtrado, servidor web, fitltrado, solo permitirá accedir all bastion host, este 
+actuará como proxy e irá al servidor web.
+Para acceder al exterior las maquinas también deben acedes a través del bastion host.
+
+Dula homed tenemos el  bastion host, pero el bastion host separa dos redes, una interna y otra entre el router y el bastion host 
+zona desmilitarizada (nube de abajo pg.45)
+Desde el exterior nohay conexiones directas, tirne que ser a través del bastion host.
+
+Screening subset firewall
+TODO, no se permiten conexiones directas desde la red interna al exterior
+El filtrado no vaa permitir ningun paquete del exterior que pudiera cruzar.
+pg 48. características de la topologia del screening subset firewall.
+
+Enn todos los casos el trafico tiene que ser por un bastion host
+
+Principios de criptografia
+Con clave simétrica ( la clave secreta ya la tienen que conocer antes de establecerse la comunicación )
+bob le envia a Alcice un numero que se llama nonce, se envía cifrado, este num se ha creado en ese momento, se supone que es apersona estña en ese momento,
+asum que nadie ha conseguido datos de una comunicacion anterior y ha establecido esta conversación. 
+Por ejemplo pasa en el Tcp, por qu eno empezamos una transmisiñon desde 0?? porque podriamos suplantar cualquier conexión 
+Alice le devuelve el mensaje con la clave simétrica. En ese momento los dos extremos ya están hablando.
+
+
+Con clave secreta es: 
+yo soy Alice, le enviaa BOB a Alice la R, esta es la clave privada de Alice, lo encripta y lo envia, le solicita la clave publica y o envia 
+qué se hace con la clave pública? puede descifrar lo que dice
+Envíar la clave pública también sirve como firma .
+Al aplicar la lclave publica y obtener R, estás comprobando que la info viene de Alice. 
+Si interceptas puedes suplantar la  identidad, el problema es que pides la clave publica por este mismo canal, y alguien puede pillaro.
+Si obtenemos la clave de otra entidad nos evitamos ese problema.
+
+Luego veremos como obtener las claves públicas de otra entidad.
+
+
+55 TODO. primera forma 
+otra forma de controlar la integridad es hacer un resumen de mensajes, funciones de hash 
+le aplicas la función de hash a un documento y obtienes un mensaje de un tamaño fijo. No tienes que enviar tidi el tiempo un mensaje, si no 
+que hacer un resumen.
+
+Por un lado envias el mensaje original, por el otro aplicas la funcion de hash, firmas y envias el mensaje.
+La idea aqui es que no firmes el documento completo, si no que solo firmes lo de hash.
+
+En recepción tomas el mesnaje firmado, desencriptas ( aplicas la clave pública de quien lo ha enviado ) y obtienes la función de HAsh
+Mensaje original, aplicas la función de hash y comparas 
+
+Como sabemos que una clave publica es de quien dice que es?
+Pues en caso de clave simétrica, se tiene que poner antes con la clave simétrica
+en caso de clave pública no tiene que ponerte de acuerdo con la clave pública. Tiene que haber un intermediakrio de confianza
+
+pg 59.
+Tenemos una clave privada asociada con el KDC, Alice se quiere comunicar con Bob por clave privada.
+Alice envia su mensaeje con clave simétrica, que aarece u nombre y el de bib.
+KDC responde con la clave secreta a Aice, Alice descifra y obtiene la clave secreta y se lo envia a Bob, como es la clave secreta que existe entre el centro.
+Cada vez que se quiera hacer una comunicación se tiene que hacer este intecmbio y hay una clave por sesión. 
+Tiene que ser una entidad en la que se confíe y tener establelcida una cclave secreta. 
+USar una clave simñetrica es nucho mas raoido que usar una clave pública. 
+
+--------------------------------------------------------------------------------
+Otro powerpoint
+crear redes virtuales para coneectar la sucursal.
+En estas conexiones "( que son ublicas ) tienes que poner cierta seguridad patra que no puedan ser accesibles parac cualquier 
+persona.
+
+Utilizar una red publica, que ya existe ( o sea, que es mucho más barato ), pero el priblema es que entonces ya no es una red privada.
+Estás usando recursos a los cuales puede acceder cualquiera, es decir, que también puede tener congestiñon, porque no tienes un circuito para ti solo.
+Seguridad: 
+protwger los datos que s eenvian a ttravés de ella 
+proteger acceso a redes pr¡ivadas 
+
+Tienes ue decir mas o menos cuanto tráfico vas a generar y la emresa te va a a segurar el delay que tengas de un extremo al otro y +el ancho de banda que vas a tener. 
+Eso sí, no te pases eeh!
+
+pg. 8  un protocolo dentro de otro protocolo ( túneles )
+El que normalmente se usa es IP y dentro de ese IP se usa el de tránsito.
+Los mensjes que se generan entre esta y esta, para interconexión ( dibujo ) se utiliza otro protocolo que va dentro del otro protocolo.
+TODO. pg 10
+
+TODO image pg.11
+
+
+
+

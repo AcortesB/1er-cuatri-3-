@@ -1,0 +1,142 @@
+Todas las herramientas de comunicación se basa en el paso de mensajes.
+Las máquinas deben ponerse de acuerdo en cómo se comunican. Debemos establecer un protocolo y conocerlo.
+
+TIPOS DE COMUNICACIÓN:
+
+Directa: conozco a mi interlocutor y le envío un mensaje a mi interlocutor, mensajes explícitos, directos. ( sockets, por ejemplo ) Sabes su dir., crear un socket y le envías por ahí los mensajes, como en SIOP, vaya. 
+
+Indirecta: yo no conozco la identidad de a quien quiero enviar el mensaje. Por ejemplo cuando te suscribes a un blog de noticias, el que cuelga la noticia no sabe quién eres tú, tú no sabes quien te lo manda. Se crea un sistema de comunicación 
+
+Acoplamiento:
+desacoplamiento espacial: no sabemos a quien se lo mandamos 
+desacoplamiento temporal: mo están los dos conectados en el mismo momento.
+
+
+comunicaciones persistentes: el mensaje se guarda
+transitorio: mando el mensaje y si el receptor está lo va a recibir, si no no y ya. No se guarda.
+
+Comunicación síncrona: mando el mensaje y me espero a saber que lo has recibido
+    sincrono en el momento de la petición
+    sincrono en el momento de entrega: se que lo he entregado y me desentiendo
+    sincrono en el momento de la respuesta: me espero a que me respondan
+    
+Comunicación asíncrona: mando el mensaje y ya lo verás si eso.
+
+Comunicacion discreta: si envío 3 cosas me da igual cuando le lleguen, sñe que le llegarán y punto
+comunicación contínua: necesito los paquetes con secuencia.
+
+PARADIGMAS DE LA COMUNICACIÓN:
+- paso de mensajes,  directo, transitorio, síncrono, no necesitamos un broker...
+
+COMUNICACIÓN EN GRUPO:
+algo me tiene que hacer la gestión de quienes son los componentes y gestionas eso, está desacoplado en espacio.
+
+MESSAGE QUEUINNG:
+enviar un mensaje a una queue , peesistente, asíncrono ( point to point ) necesitamos el broker.
+(#Publish subsrcibe: hay un broker que se encarga de la gestion de esto)
+
+MEMORIA COMPRTIDA:
+ole ole
+
+REMOTE INVOCATION:
+nos permite ejecutar rutinas en otras máquinas, sire primero para descargarme yo, pero tiene muchas ventajas.
+por ejemplo, yo tengo una app en el movil que necesita info a la que no tiene acceso, bueno, pues ejecuto un programa en una maquina que di tenga acceso y luego el resultado ya me llegará a mi movil
+
+AGENTES MOVILES:
+mueve un codigo empaquetado a donde le da la gana, es un código que permite mucha movilidad
+
+STREAM:
+comunicacion de paquetes donde hay dependencia temporal
+
+
+##### EN RESUMEN #####
+Comunicacion es paso de mensajes y sobre ellos podemos crear herramientas, estructuras, servicios, etc 
+y que estos entornos pueden tener características,etc etc etc.
+
+Todas las primitivas son pasos de mensajes: transitorio o _
+API 
+( sockets )
+
+message-queuing systems: es un sistema persistente
+point-to-point
+
+INVOCACIÓN REMOTA:
+
+RCP (Remote procedure call ): llamada a una rutina que está en otra maquina ( por ejemplo cuando utilizo el prinf, me intersa saber loq ue hace el printf? no, la llamo y espero su resultado y ya está).
+conceptualmente e suna cosa muy sencilla, pero es complexo, la libreria que implementa un RCP es muy complexa.
+La máquina que ejecuta la ruutina que he lllamado puede ser diferente a la mia y el codifo diferente. Tenemos un problema con las address space, por ejemplo: las variables no tienen porqué estar en la misma dirección, conclusión: ES MUY COMPLICADO
+
+como funciona: rutinas transparentes, call local, estos adaptadores que hacen algo por detrás y traducir se llaman stubs. ( hay uno en la entrada y otro en la salida, adaptan del lenguaje local al RCP y otro que pasa de RCP a lenguaje local para que las maquinas puedan entenderse y hablen el mismo idioma, son los traductores, vaya.
+#see RCP operarion
+
+tu no envias un RPC de cualquier rutina, no, no envías tu código, porque no sabes si va a haber un compilador igual en la ootra maquina, etc.
+Tú no haces una rutina, haces un seguidor de RCP's. Creo un catálogo de rutinas que pueden ser ejecutadas allí, ofreces las librerías. Alguien te dice: mira, hay estas llamadass disponibles , entonces tú usas lo necesario para que la otra maquina puede interpretar.
+
+pasar parámetros por el RPC:
+problemas que podemos tener con los par´ametros: como se gusradan los dtos? little endian o big endian? como guardo las matrices, como paso un parametro por referencia? 
+marshalling --> transforma los params en una frecuencia de bytes ( nos permite adaptar del local al neutro y del neutro al remoto).
+paso de params. por valor: haces un copia, se lo mandas y ya ta  
+    ( usa una representacion standard para este tipo de entornos )
+paso de params. por referencia: le mandas la dirección de donde se encuentra 
+    ( al fin y al cabo le vas a pasar el parámetro igualmente, sirve para cunaod la size que quieras recorrer como puntero sea conocida )
+    optimización: ademñas de pasar el vector o matriz por referencia ( una copia ) tambien puedes decirle para qué se va autilizar, de lectura, escritura o de los 2, porque así ya no retorna la matriz, por ejemplo, en caso de que sea solo lectura.
+
+RPC semantica y fallos:
+    - no encuentras el DNS
+    - la peticion de pierde 
+    - el cliente hace una peticion, se hace todo bien pero elcliente peta
+    - etc
+    
+Si el cliente no encuentra el Server:
+    - se nos avisaría
+    - no recibibríamos respuesta
+    Cómo lo solucionamos?
+        - según el casoque sea: por ejemplo poniendo timeouts
+        
+    3 filosofias:
+        - at least once
+        - at most onnce
+        - hope for the best
+        lo que querríamos es ka exactly once semantics
+
+Si el cliente peta:
+    - las llamadas huerfanas  deben ser eliminadas
+    - si hago un RPC y no es válido debo eliminarlo, sino gasta recursos innecesariamente
+    
+    Como elimino llamadas previas?
+        - exterminación ( regitro en algun sitio lo que hay en curso, permanentemente hasta ue se caba de ejecutar todo ) pueden fallar muchas cosas. No funciona siempre y te llevas un overhead grande :(
+        - expiracion ( creo un proceso con una fecha de expiración, y en ese momento tanto si la neccesito como si no, se acaba ) Esto tiene coste: todos los nodos remotos tienen que estr pendiente del limite, y se tiene que  poner en todos los RPC :(
+        - reencarnación ( se crean épocas, enumero las vidas y en funcions de eso los server ya pueden ver que hay un código queno tienen ninguna utilidad porque no es una época válida. Cuando el server recibe una nueva época sabe que tiene que matar los procesos de la época anterior porque ya no es válida )
+        - reencarnación suave ( lo mismo que la anterior pero asegurandonos con el cliente de que todo está OK antes de kill a los procesos )
+
+Alternativa o herramienta adicional: el RMI (remote method invocation )
+    Es un RPC orientado a objetos, lo aplicas sobre ellos
+    objetos distribuidos, lo unico que tngo que tener es una referencia sobre este objeto.
+    
+COMUNICACIÓN CON EVENTOS:
+broker, pum pum pum
+API, publish-subscribe
+
+ORIENTACIÓN ORIENTADA A STREAM:
+    comunicacion dinde hay una dependencia  temporal
+    timing es importante ( video, animacion, sensores... )
+    
+    modos:
+        - sincrono
+        - asincrono
+        - isíncrono ( puede haber un retardo más y min que podemos tener en la comunicación. ex: sist. multimedia )
+        
+    STREAM: cantidad de datos unidireccionas que soporta transmision de datos isincronas ( ex: netflix ) y que pueden enviar un solo stream o varios streams
+    stream puede ser:
+    - simple
+    - complex
+    
+    Como hace el middleware para aseguurar el timing? 
+        - usa un buffer, lo rellena para evitar el retardo de point-to-point.
+        - Guardamos un buffer, esperamos a llenarlo un poquito y mientras vamos reproduciendo nos van llegando más. Si no le da tiempo a cargarlos y hay retardo: pum, la peli se para :(
+    Alternativas para poder perder paquetes:
+        - por cada trama envías paquete entre estados, pierdes un cachito de peli, pero no tienes una pérdida de 10 segundos. No hará un salto grande, solo unos saltitos pequeños cuando haya perdido algún paquete. No esperas, tiras palante.
+        
+        
+
+

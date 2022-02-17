@@ -1,0 +1,12 @@
+descargar maquina virtual
+tienes la maquina virtual y tiene unaserie de puertos abiertos
+netstat -a ( para ver todos ) o -an
+nos interesan conexiones TCP
+vamos a probar si los puertos están abiertos viendo si se establece una conexión
+por qué no lo hacemos con UDP? poos porque no se puede
+si un puerto está abierto nos aparecerá como listen
+si hay conexión establecida pondrña stablished
+telnet IP_VM puerto
+con el shark atrapamos los mensajes TCP
+si el puerto está escuchando veremos un SYN, un SUN,ACK y un ACK
+

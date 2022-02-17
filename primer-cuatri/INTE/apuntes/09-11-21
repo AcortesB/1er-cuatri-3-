@@ -1,0 +1,139 @@
+Como IP no es un protocolo fiable tenemos el ICMP, que lo que hace es 
+informar sobre cual ha sido el fallo, que es lo que ha pasado, 
+nos ofrece info de congestión de la red.
+
+
+TEMA 3 -----------------------------------------------------------------
+ENCAMINAMIENTO ( ENROUTAMIENTO )
+
+protocolos de encaminamiento: son los ques eencargan de ver las diferentes 
+subredes y se las transmiten a su vecinos
+
+Características encaminamiento:
+son redes de destino
+directo/indirecto ( si la cimunicación es a través de un router o no  )
+Enriutamiento salto a salto, nos indica el salto siguiente
+routers mantienen donde se puede ir y a donde se puede llegar ( tabla de enrutamiento ) 
+Tablas de los dif. tipos de rutas:
+- estáticas
+- dinámicas
+- By default
+
+Problemillas a solucionar:
+Como envias los datos al final del destino 
+Necesitamos busacr el camino óptimo 
+Necesidad de intersmbio de informacion entre los nodos encargados de encaminar 
+
+En base a que se calcula que es un camino óptimo:
+Calcula un coste, y para eso hay que definir una métrica
+Si se hace una ruta la comparacion debe ser con las mismas unidades de cada lado ( teniendo en cuenta las mismsas cosas )
+
+
+Los algoritmos en los que se basan para calcular el camino óptimo son 
+- Bellman-Ford
+- Dijkstra
+
+Algoritmos que definen un criterio para escoger el camino óptimo
+- Algoritmo de vector
+- Algoritmo de distancia
+
+
+Se definen mecanismos para adaptarnos a los cambios
+- avisar cuando haya un cambio
+- recalcula coste de rutas constantemente
+
+Familias d eprotocolos de caminamiento clasicos
+
+IGP ( interior gateway protocol )
+- para el uso dentei de un dominio
+- Intencion obtee rutas optimas
+- Respuesta grande a los cambios en la topologia
+
+EGP ( exterior gateway protocol ) 
+- interconexión de dominios de este tipo
+- no es que sean ruta soptimas pero son rutas razonables
+- Se requiere que sea estable y de facil gestion
+
+
+PROTOCOLO RIP
+protocolo queutiliza el alg. ver¡ctor distancia para calcular camino optimo 
+tiene convergencia lenta --> lleva su tiempo para qye las tablas de enrutamiento se estabilicen
+protocollo robusto 
+no soporta subredes 
+fue de los primeros que apareció y se usaba antes de que se utilizasen las mascaras
+
+soporta rutas de host opcional 
+Calcula el coste del camino optimo ( métrica ) en función del numero de saltos
+por qué el maximo de saltos es 15?, para que no se produzcan bucles 
+
+Algoritmo vector distancia:
+cada nodo conoce su direccion y la de los enlaces vecinos
+no conocen la topolodia global de la red
+basado en el Bellman-Ford
+
+Por qué se llama vector distancia?
+porque lo que se envñia es nodo, destino y coste
+
+Cuando recibe la informacion incrementamos en 1 el coste
+cada nodo calcula el camino más corto a cada destino
+
+En RIP1 el destino no se envia, se envia nada mñas el nodo origen + la distancia
+TODO: mirar pagina 19 powerpoint
+
+Llega un ponto en que las tablas ya no van a cambiar,cada x tiempo lo que se hace es
+envir la informaciñon de forma sitemñatica sin que haya sucedido un cambio
+
+PROBLEMA
+convergencia ( no se actualizan todas las tablas al mismo tiempo )
+contador infinito --> no se permite porque hay un maximo de 15, cuando el valor lega a 16 ya se dice que la ruta es inalcanzable
+
+SOLUCIONES
+- split Horixon
+- poisson reverse
+
+Protocolo RIP utiliza los servicios de UDP
+long maxima: 512 bytes --> 25 rutas
+Puerto origen&destino: 520 ( origen será cualquier puerto, destino 520 )
+TODO: ultima linea 
+
+Operaciones:
+- solicitud
+- respuesta
+
+Versiones:
+- 0: se descarta el datagrama
+- 1: se acepta si todos los campos son "0"
+- otras: se aceptan si el router acepta la versión
+
+TODO: pg 29 y 30 del powerpoint
+
+TODO: pg 32, como haces para saber qué router es? 
+
+Routers envían info sobre las tablas cada 30'' ( broadcast )
+Si pasan 180'' y no recibe ninguna entrada como que se la están actualizando pondrá la métrica a 16
+Si pasan 120'' más, se borra
+
+
+Ventajas del protocolo RIP
+TODO
+
+Limitaciones del RIP
+- diámetro máximo de la red es de 15c 
+- envía info casda 30'', carga un poco la red 
+- usa el broadcast para envío de paquetes
+- métricas de un único valor
+- no soporta subredes ( es porque es la version1 )
+- No soporta mevanismo de autenticación --> problema muy grabe de estabilidad y seguridad en la red
+
+RIP v2 ( RFC 1723 )
+- permite autenticación 
+puede enviar mendjes en broadcast o en multicast ( es compatible con el RIP v1, pero para ello debe usar broadcast )
+- soporta mascaras de subnet 
+- se mantiene distancia entre subredes 15
+- mismo formato de paquetes 
+
+En este tenemos también el siguiente salto
+
+
+
+

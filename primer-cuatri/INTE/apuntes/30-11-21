@@ -1,0 +1,177 @@
+-----------------------------FTP----------------------------------------
+pg 17
+
+caracteristicas de FTP
+es fiable, se establcen 2 conexionesconexion de datos por el puerto 20
+comando s ¡e hacen por la conexion de control 
+lo rimero es conectarse al puerto 21 ( del servidor FTP )
+
+una vez que se establece la conexion de control se puede establecer la de datos. Solo es para transmitir y recibir archivos.
+comandos por la conex. de control, datos la del puerto 20
+
+caracteristicas de FTP
+codigos de 3 digitos para posibilitar controlremoto
+el primero bit indica el tipo de conexion
+(TODO imagen pg.18)
+
+formato de la info: 
+    ASCII
+    binario
+
+autentificacion:
+    login + password
+
+copiar ficheros entre hosts: put, get, mput, mget
+añadir un archivo que ya existe: append
+( TODO imagen pg.22 )
+
+cuando acaba la transferencia nos dice cuanto se ha transmitido, el tiempo y la velocidad a la que se ha transmitido la información.
+
+( TODO imagen pg.21 )
+Por cada tranferencia de datos se crea una de control.
+
+FTP anónimo
+utiliza TCP
+algunos servers permiten el acceso anónimo
+identificacion por login anonymous, password = e-mail
+
+TFTP: Trivial File Transfer Protocol
+utiliza UDP
+solo permite tranferencia de ficheros 
+no exige autenticación
+server tipo nowait
+la mayoria de los errores provocan una finalizacion de la conexion
+No es fiable
+
+maximum syze: 512b
+se confirma cada paquete
+
+diferentes modos de transferencia: netascii, octet, mail
+
+
+E-mail: 
+orden mail de Unix
+permite enviar mensajes de teztoque quedan en el buzon ( mailbox ) del usuario receptor
+
+protocolo de transferencia de correo entre hossts Unix
+Direccion = nom_usuari + nom_host
+Separacion por @
+
+
+ELEMENTOS DE UN SISTEMA DE CORREO
+(TODO pg. 29 )
+
+Protocolos de transferencia de correo electronico ( TODO: img pg.31)
+SMTP, ESMTP, MIME, POP3, IMAP4
+pop3 y IMAP4 es para acceder al buzón
+
+Modelo Store & Forward 
+TODO: pg.32 and more diapos, u see.
+cuando quieres ver los correos usas el POP3 y el IMAP4
+
+TODO:img pg.36
+
+
+SMTP
+mecanismo de tranferencia de correo entre 2 máquinas
+TCP  puerto 25
+TODO pg.39
+Destino solo puede ser un server
+Identificador de mensajes lo pone el primer MTA
+
+Ordenes de protocolo
+TODO mensajes a enviar pg.43
+Una vez que se etsbalece conexion envia un HELO
+
+En el extended se envia una EHLO, en vez de un HELO.
+
+MIME: Multipurpose Internet MAil Extension 
+TODO
+
+
+Post Office Protocol POP3
+Utiliza TCP, puerto 10 
+MEcanismos de autenficacion
+TODO pg.50
+
+Acceso a un buzón desde multiples clientes con POP3
+Una vez te desargas los mensajes no se guardan copias, si accedes al correo desde diferenes mauinas vas a ver diferentes correos, porque 
+cada vez que accedes se descargan en la maquina local. Si permites dejajr la copia, dejarlos ahí pues ok, pero no te permiten ver si están leidos o no 
+como lo sabes? 
+cuando esttán en el local 
+
+Imternet Mail Access Protocol IMAP4
+Miras los correos pero sin descargartelos
+Si miras desde diferentesmaquinas verás los mismo correos, no se descargan en la maquina local
+Permite que se identifique cuales estánleñidos o no.
+
+TODO: img pg.53
+
+
+
+la de control se mantiene todo el timpo en el momento en que el cliente y el server están conectados, cuando se hace una 
+transferencia la conexion de datos se cierra al acabar la transferencia, pero la de control se mantiene ahsta que se cierra la conexión client-server, porque es por 
+ahí por donde mandamos los comandos.
+
+
+---------------------------------------6.2 serveis--------------------------------------------
+
+TODO: hast la pg 4.
+
+WWW no es una red fisica, es una red lógica, y los nodos son los contenidos
+No ijmpoirta donde estan los contenidos guardados fisicamente, lo que importa es conocer el identificador
+
+Elementos forman la web:
+servidores que alojan los contenidos 
+los clientes ( los navegadores que permiten consultarlo )
+un lenguaje común para describir los contenidos ( HTML )
+los  enlaces ( están dentro del documento HTML )
+identificador universal ( URI --> uniform resource identifier ) también hay el URL
+protocolo HTTP, el que nos permite recibir la información.
+
+estándares de la WWW:
+HTML
+HTTP
+URI
+TODO: pg.7 & pg.8
+
+HTML
+evoluciona a XML, pero el profe no se va a meter en ello.
+
+URI
+identificador para referenciar  rcursos
+Sintaxis TODO pg.12
+TODO pg.13 & 14 & 15
+URL se indics especificamente donde está localizado el contenido
+
+
+HTTP
+Utiliza TCP, puerto 80 
+se envian peticiones y respuestas.
+Es un protocolo que no guarda ningun estado, no guarda información de la conexión.
+Cookies!!! Con las cookies puedes guardarte el estado. TODO: leer sobre las cookies.
+TODO: pg. 20
+
+GET - solicitas recurso
+HEAD - solicitas recurso pero solo quieres cabeceras
+POST - envias información ( ejecutar una app, por ejemplo )
+PUT* - envías recurso
+DELETE*
+OPTIONS*
+TODO pg.24&25
+
+codigos de respuesta
+TODO: img pg.26
+
+conexione spersistentes y no persistentes
+no persistentes: cada vez que se hace una solicitus, recibes la respuesta y se cierra la conexión
+se abre una conexion apra el documento y lego 10 conexione spara cada uan de las imagenes.
+Te conectas, obtienes respuesta y finaliza 
+En la version 1.0
+
+persistentes: 
+Se deja abierta la conexion y por esa mismsa conexión se van recibiendo los diferentes objetos
+HTTP usa por defecto conexiones persistentes con pipelining.
+
+TODO: mirar que es redireccion y reverse proxy asociado a los servers apache
+

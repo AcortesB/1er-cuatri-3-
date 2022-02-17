@@ -1,0 +1,134 @@
+ALGORITMOS DE ELECCION 
+qué es? ---> técnicas para escoger este coordinador, aka: "elección de líder"
+este algoritmo se acaba cuando se escoge lider y se le comunica a todos quien es.
+
+propiedades deseables cuando escogemos un líder:
+- Safety ( participantes escogen, saben que han escogido y saben que solo escogerán una vez
+- Liveness ( todos participan, y si no participan es porque han petado.
+
+Como funcionan estos algoritmos? 
+- cualquien proceso puede iniciar la acción. En algún momento uno se da cuenta de que el líder no está. E inicia votación.
+- solo se puede iniciar la votación una vez.
+- se decide entre todos quien es el coordinador, se necesita putuar en  base a un criterio que los procesos no puedan tener repetido.
+  ( por ejemplo el identificador más alto )
+
+Asumimos que...
+
+BULLY ALGORITHM
+el sistema es síncrono 
+- un proceso puede comunicarse con el resto de procesos
+- la entrega de ensajes entre procesos es real
+- todo proceso conoce los id's de los otros procesos 
+
+a) P lanza un mensaje de Elleccion al resto de procesos  con un ID más grande que el suyo y espera un mensaje de OK
+b) si un proceso recibe un mensaje de Elección y da su OK, empieza también una votacióny manda un mensaje de Elección.
+   ( todos envían hasata que hay uno que no le contesta ) al menos que ya haya comenzado otra. 
+c) ( si yo ya había iniciado una eleccion y contesto que OK no iniciaré una nueva elección, porque ya habré iniciado una y lo sabré ).
+d) si recibo un OK, lanzo una Eleccion y espero un mensaje de Coordinador
+e) si el P no recibe ningún OK antes del timeout, gana y envía un mensaje de Coordinador al resto.
+
+CHANG AND ROBERT'S RING ALGORITHM
+- los procesos están ordenados por ID en un anillo lógico, cada proceso solo cono
+sistema asíncrono ( pueden fallar los mensajes ) 
+multiples elecciones pueden estar en proceso
+
+a) O envñia un mensaje con su id al sucesor, hahces la comparación y envias el mas grande al sucesor ( si ya habias empezado una votación y te llega una segunda, la cortas )
+b) 2 vueltas, primera para hacer comparaciones y ver el mayor. Segunda por parte del coordinador para decir que es él
+
+Se descarta una Eleccion u otra tal cual, el mismo proceos al darse cuenta de las infos que le llegan, se queda con la mas grande 
+y descarta la mas pequeña.
+
+oh, cae un proceso!
+què fem?
+a) cuando el iniciador de la Eleccion recibe la lista con todos los vatantes, sabe cual es el proceso con el ID mas grande y le envia... (TODO )
+Si el supuesto coordinador no está en la lista vuelve a lanzar la Eleccion, si está en la lista pues es él ( TODO )
+
+TODO: mirar la comparacion entre los dos algoritmos.
+
+
+COMUNICACIÓN MULTICAST
+
+- multicast ( TODO )
+- multicast fiable ( TODO ) 
+- multicast ordenat ( TODO )
+- multicast atòmic ( TODO )
+
+propiedades para el fiable:
+1. integridad ( que se envian los mensajes al menos una vez ) 
+2. Validez ( si un proceso envia el mensaje eventualmente o recibiremos ) 
+3. Agreement ( que si un p recibe un mensaje eventualmente los otros p's lo recibirás también, pero no es una cosa ue pase siempre, los mensajes se pueden perder ) 
+
+
+Basic reliable multicasting
+
+Mecanismo de gestión que me asegura que estoy reciniendo los mensajes en secuencia, para recuperar los mensajes que no he recibido.
+
+solucion simple asumienti que los procesos no fallan y no se meten o dejan el grupo 
+- enviador asigna un numero de secuencia a cada mensaje
+- guardamos en un buffe rlos mensajes que enviemos ( liberaremos mensajes cuando todos nos hayan dado el ok ) 
+- cada proceso guarda el numero del ultimo mensaje que ha recibido de otro proceso
+
+cuando recibo un mensaje miraré si el numero de secuencia es el que yo tenía guardado del anterior+1.
+Si no es asñi pues le pido los que me faltan. 
+
+Receptor gestiona el numero de secuencia
+Emisor hace una secuencia para cada multicast que hago, me guaro los mensaje spara poder reenviarlos  quien le falte en caso de que a alguien no le hayan llegado bien los mensajes
+Yo me guardo una lista del ultimo mensaje recibido para cada  uno de los receptores
+
+Problemas de este algoritmo?
+demasiadosmensajes, solución? pues pasamos de los ACK y que solo me comuniquen cuando han perdido algún paquete.
+
+Alternativa? 
+El multicast escalable:
+pasamos de los ACK y que solo me comuniquen cuando han perdido algún paquete ( paquetes NACK ).
+- mejor escalabilidad 
+- no tiene garantía de que ... ( TODO )
+- como no tenemos ACK de todos siempre estamos en riesgo de que nos falte algún mensaje , así que en el buffer tenemos queguardar tooooodos los mensajes, se podrán borrar después de un tiempo grande.
+
+
+Ordered Multicast
+lo
+A: FIFO ordering: los que vengan de un mismo remitente los queremos recibir en orden
+B: Casual ordering: relojes lógicos, intenta mantener un orden entre maquinas, mantiene el happened-before siempre y cuando se pueda garantizar el orden
+                    implica FIFO
+C: Total ordering: ls mensajes se entregan en el mismo orden a todos los proces+òs. (
+
+
+FIFO Ordering:
+utilizando numeros de secuencia
+
+Total ordering:
+usando numeros de secuencia por grupo ( recibes todos los mensajes que se envñian y hace el bradcast con un numero de orden, todos recibirán el mismo orden )
+
+Alternativas para hacer un Total ordering:
+intentar buscar un numero de secuencia que nos cuadre a todos.
+Es una especie de reloj de Lamport, hay numeros de secuencia que cada uno guarda, 
+en el momento en que revibo un mensaje aumento el numero, si recibo un num de secuencia mas alto hago el maximo y continúo con este.
+
+TODO: echale un ojillo
+Causal ordering:
+Cuando recibimos un mensaje en fucnion de su reloj podemos ordenar si un proceso ha pasado antes o no. Recibes mensajes y gestionarás mlos mensajes si has procesado los anteriores, si no lo mantendremos en una cola de espera.
+Mantenemos el orden en base al reloj lógico. 
+
+Atomic Multicast:
+nos garantiza que el mensaje o se envía a todo el mundo o no se envia a nadie
+si hay un proceso que fallse se reenviará a los que haya fallado.
+PAra gestionar qué procesos pertenecen al grupo hay que gestionarlo: hay un servicio que gestiona esto, entonces, cada mensaje 
+se asocia con el grupo actual.
+Problema? 
+si un p envia  2 p's y mas tarde peta, ninguno de los p's recibe el mensaje.
+
+
+Sumario ( TODO )
+
+
+
+
+
+
+
+
+
+
+
+TODO mirar Lamport
